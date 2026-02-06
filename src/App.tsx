@@ -101,10 +101,10 @@ const RangeInput = ({ label, value, onChange, min, max, step = 1, isCurrency = f
 
   return (
     <div style={{ marginBottom: isCompact ? '0.5rem' : '1.25rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', alignItems: 'center' }}>
-        <label style={{ fontSize: isCompact ? '0.65rem' : '0.8rem', fontWeight: 700, color: '#0f1e38' }}>{label}</label>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', alignItems: 'flex-end', flexWrap: 'wrap', gap: '4px' }}>
+        <label style={{ fontSize: isCompact ? '0.65rem' : '0.8rem', fontWeight: 700, color: '#0f1e38', whiteSpace: 'nowrap' }}>{label}</label>
         {showValue && (
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
             {isEditing ? (
               <input
                 ref={inputRef}
@@ -122,7 +122,8 @@ const RangeInput = ({ label, value, onChange, min, max, step = 1, isCurrency = f
                   textAlign: 'right',
                   border: 'none',
                   background: 'transparent',
-                  width: isCompact ? '80px' : '120px',
+                  width: '100%',
+                  minWidth: '80px',
                   outline: 'none',
                   padding: 0,
                   margin: 0,
@@ -132,7 +133,7 @@ const RangeInput = ({ label, value, onChange, min, max, step = 1, isCurrency = f
             ) : (
               <span
                 onClick={() => setIsEditing(true)}
-                style={{ fontSize: isCompact ? '0.75rem' : '1rem', fontWeight: 900, color: '#b89b76', textAlign: 'right', cursor: 'text' }}
+                style={{ fontSize: isCompact ? '0.75rem' : '1rem', fontWeight: 900, color: '#b89b76', textAlign: 'right', cursor: 'text', whiteSpace: 'nowrap' }}
               >
                 {isCurrency
                   ? formatBRL(value)
