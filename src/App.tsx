@@ -55,13 +55,22 @@ interface RangeInputProps {
 }
 
 const RangeInput = ({ label, value, onChange, min, max, step = 1, isCurrency = false, isCompact = false, showValue = true }: RangeInputProps) => {
-  const formatBRL = (val: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(val);
+  const [inputValue, setInputValue] = useState(value.toString());
+
+  // Update local input state when prop value changes (e.g. from slider)
+  React.useEffect(() => {
+    setInputValue(value.toString());
+  }, [value]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVal = e.target.value;
+    setInputValue(newVal);
+
+    // Only trigger parent change if it's a valid number
+    const numVal = parseFloat(newVal);
+    if (!isNaN(numVal)) {
+      onChange(numVal);
+    }
   };
 
   return (
@@ -69,9 +78,31 @@ const RangeInput = ({ label, value, onChange, min, max, step = 1, isCurrency = f
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', alignItems: 'center' }}>
         <label style={{ fontSize: isCompact ? '0.65rem' : '0.8rem', fontWeight: 700, color: '#0f1e38' }}>{label}</label>
         {showValue && (
-          <span style={{ fontSize: isCompact ? '0.75rem' : '1rem', fontWeight: 900, color: '#b89b76', textAlign: 'right' }}>
-            {isCurrency ? formatBRL(value) : new Intl.NumberFormat('pt-BR').format(value) + (label.includes('Taxa') ? '%' : label.includes('Prazo') || label.includes('Tempo') ? ' anos' : '')}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            {isCurrency && <span style={{ fontSize: isCompact ? '0.75rem' : '1rem', fontWeight: 900, color: '#b89b76' }}>R$</span>}
+            <input
+              type="number"
+              value={inputValue}
+              onChange={handleInputChange}
+              step={step} // Use the step for arrows, but allow typing anything
+              min={min}
+              // max={max} // Don't strictly enforce max on typing to avoid frustration while typing
+              style={{
+                fontSize: isCompact ? '0.75rem' : '1rem',
+                fontWeight: 900,
+                color: '#b89b76',
+                textAlign: 'right',
+                border: 'none',
+                background: 'transparent',
+                width: isCompact ? '70px' : '100px',
+                outline: 'none',
+                padding: 0,
+                margin: 0,
+                // Remove spinner for cleaner look, or keep it. Let's keep default behavior but style it.
+              }}
+            />
+            {!isCurrency && <span style={{ fontSize: isCompact ? '0.75rem' : '1rem', fontWeight: 900, color: '#b89b76' }}>{label.includes('Taxa') ? '%' : label.includes('Prazo') || label.includes('Tempo') ? ' anos' : ''}</span>}
+          </div>
         )}
       </div>
       <input
