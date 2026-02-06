@@ -200,7 +200,7 @@ export class FinanceEngine {
         const monthlyInvRate = Math.pow(1 + params.investmentBenchmarkAnnual / 100, 1 / 12) - 1;
         const monthlyRentAdj = Math.pow(1 + params.inflationAnnual / 100, 1 / 12) - 1; // Rent follows inflation usually
 
-        let investmentBalance = params.downPayment;
+
         let currentRent = params.rentEstimateMonthly;
         let totalRentPaid = 0;
 
@@ -217,7 +217,7 @@ export class FinanceEngine {
         // We will simulate the Investment Path Month-by-Month alongside the Buy Path.
         // But Buy Path might end early.
 
-        const buyScenarioTotalNetEquity = buySchedule[buySchedule.length - 1].netEquity;
+
 
         // Detailed Calc:
         // We need a timeline of Cash Flows from the BUY scenario to match in the INVEST scenario.
@@ -279,7 +279,7 @@ export class FinanceEngine {
             currentRent *= (1 + monthlyRentAdj);
         }
 
-        const finalNetEquityBuy = buySchedule[buySchedule.length - 1].netEquity; // This is (PropValue - 0) usually
+
         // Wait, we need to project Property Value to the generic maxMonths if it ended early?
         // buySchedule stops when debt is 0. But property keeps appreciating.
         const lastInstallment = buySchedule[buySchedule.length - 1];

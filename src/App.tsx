@@ -585,30 +585,32 @@ const App: React.FC = () => {
       {dashboardTab === 'DASHBOARD' ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
-            <div className="card" style={{ backgroundColor: '#0f1e38', color: 'white', padding: '1.25rem', borderRadius: '16px', border: 'none' }}>
-              <p style={{ fontSize: '0.6rem', fontWeight: 900, opacity: 0.5, marginBottom: '0.4rem' }}>PRAZO PARA QUITAÇÃO</p>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 900 }}>{result.installments.length} <span style={{ fontSize: '0.75rem', opacity: 0.5 }}>meses</span></h2>
-              <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 900 }}>-{result.monthsReduced} meses</span>
+            <div className="card" style={{ backgroundColor: '#0f1e38', color: 'white', padding: '1.25rem', borderRadius: '16px', border: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '130px' }}>
+              <div>
+                <p style={{ fontSize: '0.6rem', fontWeight: 900, opacity: 0.5, marginBottom: '0.4rem' }}>PRAZO PARA QUITAÇÃO</p>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: 900, lineHeight: 1 }}>{result.installments.length} <span style={{ fontSize: '0.75rem', opacity: 0.5 }}>meses</span></h2>
+              </div>
+              <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 900, alignSelf: 'flex-start' }}>-{result.monthsReduced} meses</span>
             </div>
-            <div className="card" style={{ padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)', backgroundColor: 'white' }}>
+            <div className="card" style={{ padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)', backgroundColor: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '130px' }}>
               <p style={{ fontSize: '0.6rem', fontWeight: 900, color: '#9ba3af', marginBottom: '0.4rem' }}>VALOR DO IMÓVEL (HOJE)</p>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f1e38' }}>{formatBRL(propertyValue)}</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f1e38', lineHeight: 1 }}>{formatBRL(propertyValue)}</h2>
             </div>
-            <div className="card" style={{ padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)', backgroundColor: 'white' }}>
-              <p style={{ fontSize: '0.6rem', fontWeight: 900, color: '#9ba3af', marginBottom: '0.4rem' }}>INVESTIMENTO TOTAL (FIN + ENT)</p>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f1e38' }}>{formatBRL(result.totalPaid + downPayment)}</h2>
+            <div className="card" style={{ padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)', backgroundColor: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '130px' }}>
+              <p style={{ fontSize: '0.6rem', fontWeight: 900, color: '#9ba3af', marginBottom: '0.4rem' }}>INVESTIMENTO TOTAL</p>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f1e38', lineHeight: 1 }}>{formatBRL(result.totalPaid + downPayment)}</h2>
             </div>
-            <div className="card" style={{ backgroundColor: 'var(--muted)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+            <div className="card" style={{ backgroundColor: 'var(--muted)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '130px' }}>
               <p style={{ fontSize: '0.6rem', fontWeight: 900, color: '#b89b76', marginBottom: '0.4rem' }}>TOTAL EM JUROS</p>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f1e38' }}>{formatBRL(result.totalInterest)}</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f1e38', lineHeight: 1 }}>{formatBRL(result.totalInterest)}</h2>
             </div>
-            <div className="card" style={{ background: 'linear-gradient(135deg, #0f1e38 0%, #1e293b 100%)', color: 'white', padding: '1.25rem', borderRadius: '16px', border: 'none' }}>
+            <div className="card" style={{ background: 'linear-gradient(135deg, #0f1e38 0%, #1e293b 100%)', color: 'white', padding: '1.25rem', borderRadius: '16px', border: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '130px' }}>
               <p style={{ fontSize: '0.6rem', fontWeight: 900, color: 'rgba(255,255,255,0.6)', marginBottom: '0.4rem' }}>ECONOMIA DE JUROS ESTIMADA</p>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'white' }}>{formatBRL(result.totalSaved)}</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'white', lineHeight: 1 }}>{formatBRL(result.totalSaved)}</h2>
             </div>
-            <div className="card" style={{ background: 'linear-gradient(135deg, #b89b76 0%, #a68a64 100%)', color: 'white', padding: '1.25rem', borderRadius: '16px', border: 'none' }}>
+            <div className="card" style={{ background: 'linear-gradient(135deg, #b89b76 0%, #a68a64 100%)', color: 'white', padding: '1.25rem', borderRadius: '16px', border: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '130px' }}>
               <p style={{ fontSize: '0.6rem', fontWeight: 900, opacity: 0.8, marginBottom: '0.4rem' }}>EFICIÊNCIA</p>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 900 }}>{efficiency}%</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, lineHeight: 1 }}>{efficiency}%</h2>
             </div>
           </div>
 
@@ -711,8 +713,12 @@ const App: React.FC = () => {
                   <RangeInput label="Entrada" value={downPayment} onChange={setDownPayment} min={0} max={propertyValue * 0.9} step={5000} isCurrency={true} isCompact={true} />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '0.5rem' }}>
-                  <RangeInput label="Taxa (%)" value={interestRate} onChange={setInterestRate} min={5} max={18} step={0.1} isCompact={true} />
+                  <RangeInput label="Taxa (%)" value={interestRate} onChange={setInterestRate} min={0} max={18} step={0.1} isCompact={true} />
                   <RangeInput label="Prazo" value={termYears} onChange={setTermYears} min={5} max={35} isCompact={true} />
+                </div>
+                <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem' }}>
+                  <button onClick={() => setType('SAC')} style={{ flex: 1, padding: '0.5rem', border: 'none', borderRadius: '8px', backgroundColor: type === 'SAC' ? '#0f1e38' : 'var(--muted)', color: type === 'SAC' ? 'white' : '#7a715e', fontWeight: 900, fontSize: '0.65rem', cursor: 'pointer' }}>SAC</button>
+                  <button onClick={() => setType('PRICE')} style={{ flex: 1, padding: '0.5rem', border: 'none', borderRadius: '8px', backgroundColor: type === 'PRICE' ? '#0f1e38' : 'var(--muted)', color: type === 'PRICE' ? 'white' : '#7a715e', fontWeight: 900, fontSize: '0.65rem', cursor: 'pointer' }}>PRICE</button>
                 </div>
                 <div style={{ marginTop: '0.5rem' }}>
                   <p style={{ fontSize: '0.6rem', color: '#9ba3af', fontStyle: 'italic' }}>
@@ -798,8 +804,9 @@ const App: React.FC = () => {
             </table>
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 
   return (
