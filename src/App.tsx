@@ -144,11 +144,7 @@ const App: React.FC = () => {
     return result.installments.reduce((acc, inst) => acc + inst.extraAmortization, 0);
   }, [result]);
 
-  const finalFullTermPropertyValue = useMemo(() => {
-    return propertyValue * (1 + appreciationRate / 100) ** termYears;
-  }, [propertyValue, appreciationRate, termYears]);
 
-  const netProfit = useMemo(() => finalFullTermPropertyValue - (result.totalPaid + downPayment), [finalFullTermPropertyValue, result, downPayment]);
 
   const efficiency = useMemo(() => {
     if (totalExtraInvested === 0) return 0;
@@ -603,12 +599,12 @@ const App: React.FC = () => {
               <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f1e38' }}>{formatBRL(result.totalPaid + downPayment)}</h2>
             </div>
             <div className="card" style={{ backgroundColor: 'var(--muted)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
-              <p style={{ fontSize: '0.6rem', fontWeight: 900, color: '#b89b76', marginBottom: '0.4rem' }}>VALOR ESTIMADO (ANO 35)</p>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f1e38' }}>{formatBRL(finalFullTermPropertyValue)}</h2>
+              <p style={{ fontSize: '0.6rem', fontWeight: 900, color: '#b89b76', marginBottom: '0.4rem' }}>TOTAL EM JUROS</p>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f1e38' }}>{formatBRL(result.totalInterest)}</h2>
             </div>
             <div className="card" style={{ background: 'linear-gradient(135deg, #0f1e38 0%, #1e293b 100%)', color: 'white', padding: '1.25rem', borderRadius: '16px', border: 'none' }}>
-              <p style={{ fontSize: '0.6rem', fontWeight: 900, color: 'rgba(255,255,255,0.6)', marginBottom: '0.4rem' }}>LUCRO LÍQUIDO ESTIMADO</p>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'white' }}>{formatBRL(netProfit)}</h2>
+              <p style={{ fontSize: '0.6rem', fontWeight: 900, color: 'rgba(255,255,255,0.6)', marginBottom: '0.4rem' }}>ECONOMIA DE JUROS ESTIMADA</p>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'white' }}>{formatBRL(result.totalSaved)}</h2>
             </div>
             <div className="card" style={{ background: 'linear-gradient(135deg, #b89b76 0%, #a68a64 100%)', color: 'white', padding: '1.25rem', borderRadius: '16px', border: 'none' }}>
               <p style={{ fontSize: '0.6rem', fontWeight: 900, opacity: 0.8, marginBottom: '0.4rem' }}>EFICIÊNCIA</p>
