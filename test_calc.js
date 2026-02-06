@@ -22,10 +22,6 @@ const calculateAmortization = (
     // PRICE Fixed Payment Formula
     const fixedPricePayment = loanAmount * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
 
-    console.log(`Debug: Loan=${loanAmount}, Rate=${annualInterestRate}%, Term=${termMonths}, Type=${type}`);
-    console.log(`Debug: Monthly Rate=${monthlyInterestRate.toFixed(8)}`);
-    console.log(`Debug: Fixed Price Payment (calc)=${fixedPricePayment.toFixed(2)}`);
-
     for (let month = 1; month <= termMonths; month++) {
         if (currentBalance <= 0.01) break;
 
@@ -73,25 +69,27 @@ const calculateAmortization = (
     };
 };
 
-const loan = 156817.28;
-const rate = 4.5;
-const term = 420;
+console.log("\n--- VERIFICATION 1: PRICE (Doc 222) ---");
+const loanPrice = 240000.00;
+const ratePrice = 10.9259;
+const termPrice = 360;
+const resPrice = calculateAmortization(loanPrice, loanPrice, ratePrice, termPrice, 'PRICE');
 
-console.log("\n--- PDF CASE VERIFICATION (PRICE) ---");
-const priceResult = calculateAmortization(loan, loan, rate, term, 'PRICE');
+const p1 = resPrice.installments[0];
+console.log(`Loan: ${loanPrice}, Rate: ${ratePrice}%, Term: ${termPrice}m`);
+console.log(`Month 1 Payment (Amort + Int): ${p1.payment.toFixed(2)} (Expected 2272.14)`);
+console.log(`Month 1 Interest: ${p1.interest.toFixed(2)}`);
+console.log(`Month 1 Amortization: ${p1.amortization.toFixed(2)}`);
 
-const m1 = priceResult.installments[0];
-console.log(`Month 1: Pmt=${m1.payment.toFixed(2)} (Expected ~742.14)`);
-console.log(`Month 1: Int=${m1.interest.toFixed(2)} (Expected ~588.06)`);
-console.log(`Month 1: Amort=${m1.amortization.toFixed(2)} (Expected ~154.08)`);
-console.log(`Month 1: Bal=${m1.balance.toFixed(2)} (Expected ~156663.20)`);
 
-const m2 = priceResult.installments[1];
-console.log(`Month 2: Pmt=${m2.payment.toFixed(2)}`);
-console.log(`Month 2: Int=${m2.interest.toFixed(2)}`);
-console.log(`Month 2: Amort=${m2.amortization.toFixed(2)}`);
-console.log(`Month 2: Bal=${m2.balance.toFixed(2)}`);
+console.log("\n--- VERIFICATION 2: SAC (Doc 333) ---");
+const loanSac = 270000.00;
+const rateSac = 10.9259;
+const termSac = 420;
+const resSac = calculateAmortization(loanSac, loanSac, rateSac, termSac, 'SAC');
 
-console.log("\n--- SAC COMPARISON ---");
-const sacResult = calculateAmortization(loan, loan, rate, term, 'SAC');
-console.log(`SAC Month 1 Pmt=${sacResult.installments[0].payment.toFixed(2)}`);
+const s1 = resSac.installments[0];
+console.log(`Loan: ${loanSac}, Rate: ${rateSac}%, Term: ${termSac}m`);
+console.log(`Month 1 Payment (Amort + Int): ${s1.payment.toFixed(2)} (Expected 3101.18)`);
+console.log(`Month 1 Interest: ${s1.interest.toFixed(2)}`);
+console.log(`Month 1 Amortization: ${s1.amortization.toFixed(2)}`);

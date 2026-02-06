@@ -134,7 +134,11 @@ const RangeInput = ({ label, value, onChange, min, max, step = 1, isCurrency = f
                 onClick={() => setIsEditing(true)}
                 style={{ fontSize: isCompact ? '0.75rem' : '1rem', fontWeight: 900, color: '#b89b76', textAlign: 'right', cursor: 'text' }}
               >
-                {isCurrency ? formatBRL(value) : new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 }).format(value) + (label.includes('Taxa') ? '%' : label.includes('Prazo') || label.includes('Tempo') ? ' anos' : '')}
+                {isCurrency
+                  ? formatBRL(value)
+                  : label.includes('meses')
+                    ? `${value} (${(value / 12).toFixed(1).replace('.0', '')} anos)`
+                    : new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 }).format(value) + (label.includes('Taxa') ? '%' : label.includes('Prazo') || label.includes('Tempo') ? ' anos' : '')}
               </span>
             )}
           </div>
@@ -175,7 +179,7 @@ const App: React.FC = () => {
   const [propertyValue, setPropertyValue] = useState(250000);
   const [downPayment, setDownPayment] = useState(50000);
   const [interestRate, setInterestRate] = useState(9.57);
-  const [termYears, setTermYears] = useState(35);
+  const [termMonths, setTermMonths] = useState(420);
   const [type, setType] = useState<AmortizationType>('SAC');
   const [monthlyExtra, setMonthlyExtra] = useState(0);
   const [strategyMode, setStrategyMode] = useState<'VALUE' | 'TIME'>('VALUE');
@@ -184,7 +188,7 @@ const App: React.FC = () => {
 
   // Calculated Loan Amount
   const loanAmount = useMemo(() => propertyValue - downPayment, [propertyValue, downPayment]);
-  const termMonths = termYears * 12;
+  const termYears = termMonths / 12;
 
   const calculateMonthlyPayment = (principal: number, annualRate: number, months: number, amortType: AmortizationType): number => {
     const monthlyRate = annualRate / 100 / 12;
@@ -501,7 +505,7 @@ const App: React.FC = () => {
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
                 <RangeInput label="Taxa Anual (%)" value={interestRate} onChange={setInterestRate} min={1} max={20} step={0.1} />
-                <RangeInput label="Prazo (Anos)" value={termYears} onChange={setTermYears} min={1} max={35} />
+                <RangeInput label="Prazo (meses)" value={termMonths} onChange={setTermMonths} min={60} max={420} step={1} />
               </div>
 
               <div style={{ padding: '1.5rem 2.5rem', background: '#0f1e38', borderRadius: '24px', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', marginTop: '1rem' }}>
@@ -790,7 +794,7 @@ const App: React.FC = () => {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '0.5rem' }}>
                   <RangeInput label="Taxa (%)" value={interestRate} onChange={setInterestRate} min={0} max={18} step={0.1} isCompact={true} />
-                  <RangeInput label="Prazo" value={termYears} onChange={setTermYears} min={5} max={35} isCompact={true} />
+                  <RangeInput label="Prazo (meses)" value={termMonths} onChange={setTermMonths} min={60} max={420} step={1} isCompact={true} />
                 </div>
                 <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem' }}>
                   <button onClick={() => setType('SAC')} style={{ flex: 1, padding: '0.5rem', border: 'none', borderRadius: '8px', backgroundColor: type === 'SAC' ? '#0f1e38' : 'var(--muted)', color: type === 'SAC' ? 'white' : '#7a715e', fontWeight: 900, fontSize: '0.65rem', cursor: 'pointer' }}>SAC</button>
