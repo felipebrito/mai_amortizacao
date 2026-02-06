@@ -19,6 +19,12 @@ export interface CalculationResult {
     finalPropertyValue: number;
 }
 
+export interface FGTSConfig {
+    initialBalance: number;
+    monthlyGrossIncome: number;
+    useEveryTwoYears: boolean;
+}
+
 export const calculateAmortization = (
     propertyValue: number,
     loanAmount: number,
@@ -27,7 +33,8 @@ export const calculateAmortization = (
     type: AmortizationType,
     monthlyExtra: number = 0,
     oneTimeExtras: { [month: number]: number } = {},
-    appreciationRate: number = 5 // % per year default
+    appreciationRate: number = 5, // % per year default
+    fgts: FGTSConfig = { initialBalance: 0, monthlyGrossIncome: 0, useEveryTwoYears: false }
 ): CalculationResult => {
     const monthlyInterestRate = annualInterestRate / 100 / 12;
     const monthlyAppreciationRate = (1 + appreciationRate / 100) ** (1 / 12) - 1;
@@ -37,6 +44,10 @@ export const calculateAmortization = (
     let totalPaid = 0;
     let totalInterest = 0;
 
+    // FGTS State
+    let currentFGTSBalance = fgts.initialBalance;
+    const monthlyFGTSDeposit = fgts.monthlyGrossIncome * 0.08;
+
     // For PRICE, calculate fixed payment (without extras)
     // M = P * (i * (1 + i)^n) / ((1 + i)^n - 1)
     const n = termMonths;
@@ -45,6 +56,9 @@ export const calculateAmortization = (
 
     for (let month = 1; month <= termMonths; month++) {
         if (currentBalance <= 0) break;
+
+        // Accrue FGTS
+        currentFGTSBalance += monthlyFGTSDeposit;
 
         const interest = currentBalance * monthlyInterestRate;
         let amortization = 0;
@@ -64,7 +78,14 @@ export const calculateAmortization = (
             payment = amortization + interest;
         }
 
-        const extra = monthlyExtra + (oneTimeExtras[month] || 0);
+        let extra = monthlyExtra + (oneTimeExtras[month] || 0);
+
+        // FGTS Application (Every 2 years = months 24, 48, 72...)
+        if (fgts.useEveryTwoYears && month % 24 === 0) {
+            extra += currentFGTSBalance;
+            currentFGTSBalance = 0; // Reset FGTS after use
+        }
+
         const actualExtra = Math.min(extra, currentBalance - amortization);
 
         const currentBalanceBefore = currentBalance;

@@ -185,6 +185,11 @@ const App: React.FC = () => {
   const [monthlyExtra, setMonthlyExtra] = useState(0);
   const [strategyMode, setStrategyMode] = useState<'VALUE' | 'TIME'>('VALUE');
   const [targetYears, setTargetYears] = useState(10);
+  // FGTS State
+  const [useFGTS, setUseFGTS] = useState(false);
+  const [fgtsBalance, setFgtsBalance] = useState(0);
+  const [grossIncome, setGrossIncome] = useState(0);
+
   const appreciationRate = 5; // Fixed estimate based on Brazilian market indices (IPCA + Real Growth)
 
   // Calculated Loan Amount
@@ -218,8 +223,12 @@ const App: React.FC = () => {
   const activeExtra = useMemo(() => strategyMode === 'VALUE' ? monthlyExtra : calculatedExtraValue, [strategyMode, monthlyExtra, calculatedExtraValue]);
 
   const result = useMemo(() => {
-    return calculateAmortization(propertyValue, loanAmount, interestRate, termMonths, type, activeExtra, {}, appreciationRate);
-  }, [propertyValue, loanAmount, interestRate, termMonths, type, activeExtra, appreciationRate]);
+    return calculateAmortization(propertyValue, loanAmount, interestRate, termMonths, type, activeExtra, {}, appreciationRate, {
+      initialBalance: fgtsBalance,
+      monthlyGrossIncome: grossIncome,
+      useEveryTwoYears: useFGTS
+    });
+  }, [propertyValue, loanAmount, interestRate, termMonths, type, activeExtra, appreciationRate, fgtsBalance, grossIncome, useFGTS]);
 
   const totalExtraInvested = useMemo(() => {
     return result.installments.reduce((acc, inst) => acc + inst.extraAmortization, 0);
@@ -797,6 +806,26 @@ const App: React.FC = () => {
                   <RangeInput label="Taxa (%)" value={interestRate} onChange={setInterestRate} min={0} max={18} step={0.1} isCompact={true} />
                   <RangeInput label="Prazo (meses)" value={termMonths} onChange={setTermMonths} min={60} max={420} step={1} isCompact={true} />
                 </div>
+
+                <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: useFGTS ? '0.5rem' : '0' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#166534' }}>Usar FGTS (a cada 2 anos)?</span>
+                    <label className="switch" style={{ position: 'relative', display: 'inline-block', width: '40px', height: '20px' }}>
+                      <input type="checkbox" checked={useFGTS} onChange={(e) => setUseFGTS(e.target.checked)} style={{ opacity: 0, width: 0, height: 0 }} />
+                      <div style={{ position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: useFGTS ? '#166534' : '#cbd5e1', transition: '.4s', borderRadius: '34px' }}>
+                        <div style={{ position: 'absolute', content: '""', height: '16px', width: '16px', left: useFGTS ? '22px' : '2px', bottom: '2px', backgroundColor: 'white', transition: '.4s', borderRadius: '50%' }}></div>
+                      </div>
+                    </label>
+                  </div>
+
+                  {useFGTS && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '0.5rem' }}>
+                      <RangeInput label="Saldo FGTS Atual" value={fgtsBalance} onChange={setFgtsBalance} min={0} max={500000} step={1000} isCurrency={true} isCompact={true} />
+                      <RangeInput label="Renda Bruta Mensal" value={grossIncome} onChange={setGrossIncome} min={0} max={50000} step={500} isCurrency={true} isCompact={true} />
+                    </div>
+                  )}
+                </div>
+
                 <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem' }}>
                   <button onClick={() => setType('SAC')} style={{ flex: 1, padding: '0.5rem', border: 'none', borderRadius: '8px', backgroundColor: type === 'SAC' ? '#0f1e38' : 'var(--muted)', color: type === 'SAC' ? 'white' : '#7a715e', fontWeight: 900, fontSize: '0.65rem', cursor: 'pointer' }}>SAC</button>
                   <button onClick={() => setType('PRICE')} style={{ flex: 1, padding: '0.5rem', border: 'none', borderRadius: '8px', backgroundColor: type === 'PRICE' ? '#0f1e38' : 'var(--muted)', color: type === 'PRICE' ? 'white' : '#7a715e', fontWeight: 900, fontSize: '0.65rem', cursor: 'pointer' }}>PRICE</button>
