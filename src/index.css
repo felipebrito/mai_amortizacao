@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+  --background: #ebe7de;
+  --foreground: #0f1e38;
+  --card: #ffffff;
+  --card-foreground: #0f1e38;
+  --popover: #ffffff;
+  --popover-foreground: #0f1e38;
+  --primary: #b89b76;
+  --primary-foreground: #fdfcf9;
+  --secondary: #e2ddd0;
+  --secondary-foreground: #18294d;
+  --muted: #dfd8cb;
+  --muted-foreground: #5a4d3c;
+  --accent: #dfd8cb;
+  --accent-foreground: #b89b76;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #c9c1af;
+  --input: #d1d7e0;
+  --ring: #b89b76;
+  --chart-1: #b89b76;
+  --chart-2: #8a7457;
+  --chart-3: #5c4e3a;
+  --chart-4: #2e271d;
+  --chart-5: #18294d;
+  --sidebar: #fdfcf9;
+  --sidebar-foreground: #0f1e38;
+  --sidebar-primary: #b89b76;
+  --sidebar-primary-foreground: #fdfcf9;
+  --sidebar-accent: #f3eee4;
+  --sidebar-accent-foreground: #b89b76;
+  --sidebar-border: #d1d7e0;
+  --sidebar-ring: #b89b76;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Poppins', ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --radius: 0.5rem;
+  --shadow-2xs: 0 1px 2px 0 hsla(220 28% 12% / 0.03);
+  --shadow-xs: 0 1px 3px 0 hsla(220 28% 12% / 0.05), 0 1px 2px -1px hsla(220 28% 12% / 0.05);
+  --shadow-sm: 0 2px 4px -1px hsla(220 28% 12% / 0.06), 0 2px 4px -2px hsla(220 28% 12% / 0.06);
+  --shadow: 0 4px 6px -1px hsla(220 28% 12% / 0.1), 0 2px 4px -2px hsla(220 28% 12% / 0.1);
+  --shadow-md: 0 10px 15px -3px hsla(220 28% 12% / 0.1), 0 4px 6px -4px hsla(220 28% 12% / 0.1);
+  --shadow-lg: 0 20px 25px -5px hsla(220 28% 12% / 0.1), 0 8px 10px -6px hsla(220 28% 12% / 0.1);
+  --shadow-xl: 0 25px 50px -12px hsla(220 28% 12% / 0.15);
+  --shadow-2xl: 0 30px 60px -15px hsla(220 28% 12% / 0.25);
+  --tracking-normal: -0.025em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #f5f1e6;
+  --card: #0f1e38;
+  --card-foreground: #f5f1e6;
+  --popover: #0f1e38;
+  --popover-foreground: #f5f1e6;
+  --primary: #d8b98f;
+  --primary-foreground: #0f1e38;
+  --secondary: #18294d;
+  --secondary-foreground: #d1cdc5;
+  --muted: #2c3e50;
+  --muted-foreground: #b8b4ab;
+  --accent: #3c352a;
+  --accent-foreground: #d8b98f;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #5a4d3c;
+  --input: #5a4d3c;
+  --ring: #d8b98f;
+  --chart-1: #d8b98f;
+  --chart-2: #f5f1e6;
+  --chart-3: #b8b4ab;
+  --chart-4: #ffffff;
+  --chart-5: #5a4d3c;
+  --sidebar: #0f1e38;
+  --sidebar-foreground: #f5f1e6;
+  --sidebar-primary: #d8b98f;
+  --sidebar-primary-foreground: #0f1e38;
+  --sidebar-accent: #3c352a;
+  --sidebar-accent-foreground: #d8b98f;
+  --sidebar-border: #5a4d3c;
+  --sidebar-ring: #d8b98f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--foreground);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: var(--tracking-normal);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.card {
+  background: var(--card);
+  color: var(--card-foreground);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-family: var(--font-sans);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: border-color 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px var(--shadow-sm);
+}
