@@ -55,22 +55,48 @@ interface RangeInputProps {
 }
 
 const RangeInput = ({ label, value, onChange, min, max, step = 1, isCurrency = false, isCompact = false, showValue = true }: RangeInputProps) => {
+  const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value.toString());
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  // Update local input state when prop value changes (e.g. from slider)
   React.useEffect(() => {
     setInputValue(value.toString());
   }, [value]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVal = e.target.value;
-    setInputValue(newVal);
+  React.useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
 
-    // Only trigger parent change if it's a valid number
-    const numVal = parseFloat(newVal);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleBlur = () => {
+    setIsEditing(false);
+    const numVal = parseFloat(inputValue);
     if (!isNaN(numVal)) {
       onChange(numVal);
+    } else {
+      setInputValue(value.toString());
     }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleBlur();
+    }
+  };
+
+  const formatBRL = (val: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(val);
   };
 
   return (
@@ -78,30 +104,39 @@ const RangeInput = ({ label, value, onChange, min, max, step = 1, isCurrency = f
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', alignItems: 'center' }}>
         <label style={{ fontSize: isCompact ? '0.65rem' : '0.8rem', fontWeight: 700, color: '#0f1e38' }}>{label}</label>
         {showValue && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            {isCurrency && <span style={{ fontSize: isCompact ? '0.75rem' : '1rem', fontWeight: 900, color: '#b89b76' }}>R$</span>}
-            <input
-              type="number"
-              value={inputValue}
-              onChange={handleInputChange}
-              step={step} // Use the step for arrows, but allow typing anything
-              min={min}
-              // max={max} // Don't strictly enforce max on typing to avoid frustration while typing
-              style={{
-                fontSize: isCompact ? '0.75rem' : '1rem',
-                fontWeight: 900,
-                color: '#b89b76',
-                textAlign: 'right',
-                border: 'none',
-                background: 'transparent',
-                width: isCompact ? '70px' : '100px',
-                outline: 'none',
-                padding: 0,
-                margin: 0,
-                // Remove spinner for cleaner look, or keep it. Let's keep default behavior but style it.
-              }}
-            />
-            {!isCurrency && <span style={{ fontSize: isCompact ? '0.75rem' : '1rem', fontWeight: 900, color: '#b89b76' }}>{label.includes('Taxa') ? '%' : label.includes('Prazo') || label.includes('Tempo') ? ' anos' : ''}</span>}
+          <div style={{ position: 'relative' }}>
+            {isEditing ? (
+              <input
+                ref={inputRef}
+                type="number"
+                value={inputValue}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                step={step}
+                className="no-spinners"
+                style={{
+                  fontSize: isCompact ? '0.75rem' : '1rem',
+                  fontWeight: 900,
+                  color: '#b89b76',
+                  textAlign: 'right',
+                  border: 'none',
+                  background: 'transparent',
+                  width: isCompact ? '80px' : '120px',
+                  outline: 'none',
+                  padding: 0,
+                  margin: 0,
+                  fontFamily: 'inherit'
+                }}
+              />
+            ) : (
+              <span
+                onClick={() => setIsEditing(true)}
+                style={{ fontSize: isCompact ? '0.75rem' : '1rem', fontWeight: 900, color: '#b89b76', textAlign: 'right', cursor: 'text' }}
+              >
+                {isCurrency ? formatBRL(value) : new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 }).format(value) + (label.includes('Taxa') ? '%' : label.includes('Prazo') || label.includes('Tempo') ? ' anos' : '')}
+              </span>
+            )}
           </div>
         )}
       </div>
@@ -115,6 +150,16 @@ const RangeInput = ({ label, value, onChange, min, max, step = 1, isCurrency = f
         className="range-input"
         style={{ height: isCompact ? '4px' : '6px', width: '100%', accentColor: 'var(--primary)', cursor: 'pointer' }}
       />
+      <style>{`
+        .no-spinners::-webkit-outer-spin-button,
+        .no-spinners::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .no-spinners {
+          -moz-appearance: textfield;
+        }
+      `}</style>
     </div>
   );
 };
