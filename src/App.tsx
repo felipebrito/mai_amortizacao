@@ -695,7 +695,7 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '1.5rem', alignItems: 'start' }}>
             <div className="card" style={{ borderRadius: '24px', padding: '2rem', border: '1px solid var(--border)', backgroundColor: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0f1e38' }}>Evolução de Patrimônio vs Dívida</h3>
