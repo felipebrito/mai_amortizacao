@@ -2,6 +2,7 @@ export type AmortizationType = 'SAC' | 'PRICE';
 
 export interface Installment {
     month: number;
+    initialBalance: number;
     payment: number;
     interest: number;
     amortization: number;
@@ -19,6 +20,7 @@ export interface CalculationResult {
 }
 
 export const calculateAmortization = (
+    propertyValue: number,
     loanAmount: number,
     annualInterestRate: number,
     termMonths: number,
@@ -31,7 +33,7 @@ export const calculateAmortization = (
     const monthlyAppreciationRate = (1 + appreciationRate / 100) ** (1 / 12) - 1;
     const installments: Installment[] = [];
     let currentBalance = loanAmount;
-    let currentPropertyValue = loanAmount;
+    let currentPropertyValue = propertyValue;
     let totalPaid = 0;
     let totalInterest = 0;
 
@@ -65,6 +67,7 @@ export const calculateAmortization = (
         const extra = monthlyExtra + (oneTimeExtras[month] || 0);
         const actualExtra = Math.min(extra, currentBalance - amortization);
 
+        const currentBalanceBefore = currentBalance;
         currentBalance -= (amortization + actualExtra);
         currentPropertyValue *= (1 + monthlyAppreciationRate);
         totalPaid += (payment + actualExtra);
@@ -72,6 +75,7 @@ export const calculateAmortization = (
 
         installments.push({
             month,
+            initialBalance: currentBalanceBefore,
             payment: payment + actualExtra,
             interest,
             amortization,
@@ -123,6 +127,7 @@ const calculateAmortizationBase = (
 };
 
 export const calculateExtraNeeded = (
+    propertyValue: number,
     loanAmount: number,
     annualInterestRate: number,
     termMonths: number,
@@ -135,7 +140,7 @@ export const calculateExtraNeeded = (
 
     for (let i = 0; i < 20; i++) {
         extra = (low + high) / 2;
-        const result = calculateAmortization(loanAmount, annualInterestRate, termMonths, type, extra);
+        const result = calculateAmortization(propertyValue, loanAmount, annualInterestRate, termMonths, type, extra);
         if (result.installments.length > targetMonths) {
             low = extra;
         } else {
